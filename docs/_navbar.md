@@ -27,6 +27,7 @@
   - [RPC](/RPC/Rpc.md#rpc)
   - [Zookeeper](./RPC/Zookeeper.md#zookeeper)
   - [Dubbo](./RPC/Dubbo.md#Dubbo)
+  - [FastDFS](/RPC/FastDFS.md#FastDFS)
 
 - 软件仓库
   -  [office办公软件](https://mp.weixin.qq.com/s/29Do6pjEeA2yJuvVZjVHjg)
@@ -53,6 +54,11 @@
   * [编码转换](https://tool.lu/encdec/)
   * [Linux命令大全](https://www.linuxcool.com/)
   * [Linux软件开发](https://linux.cn/tech/program/) 
+
+- 面试专区
+  - [Java面试题](/java/java面试题#java面试题)
+  - [Mysql面试题](/preparing)
+  - [分布式面试题](/preparing)
 
 
 

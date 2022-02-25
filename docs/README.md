@@ -14,7 +14,7 @@
 
 # 为什么会有这个网站?
 
-> 本网站取名CodeM,即CodeMar(代码--火星)意为[自学编程的探索之路],是我学习全栈以来的各种经历与心路历程,网站前后端以及各种实用工具;
+> 本网站取名CodeM,即CodeMar(代码--火星)意为[自学编程的探索之路],是我学习全栈以来的各种经历与心路历程,网站前后端以及各种实用工具,本网站不追求过多华丽效果,只追求实用;
 
 >本网站旨在为自学编程的小白提供便捷的学习之路:
 
@@ -59,11 +59,17 @@
 | **[Eclipse](https://www.w3cschool.cn/eclipse/)**        | **[MySQL](/mysql/MySQLBase01.md#mysql数据库)** | **[CSS](https://www.runoob.com/css/css-tutorial.html)** | **[Vue](https://cn.vuejs.org/v2/guide/)**    | **[Maven](/maven/MavenBase1.md#Maven)**                | **[Junit5](/Junit/Junit.md#Junit5)**                   |
 | **[JScript](https://www.w3school.com.cn/js/index.asp)** | **[Spring](/spring/Spring.md#spring)**         | **[SpringMvc](/spring/SpringMvc.md#springmvc)**         | **[Git](/git/GitBase01.md#Git)**             | **[FreeMarker](/freemarker/freemarker.md#freemarker)** | **[RPC](/RPC/Rpc.md#RPC)**                             |
 | **[Tomcat](/tomcat/tomcat.md#tomcat的安装)**            | **[Mybatis](/mybatis/Mybatis.md#mybatis)**     | **[SpringBoot](/spring/SpringBoot.md#springboot)**      | **[Linux](/linux/LinuxsysStu.md#Linux学习)** | **[ThymeLeaf](/thymeleaf/ThymeLeaf.md#thymeleaf)**     | **[ZooKeeper](/RPC/Zookeeper.md#ZooKeeper)**           |
-| **[Dubbo](/RPC/Dubbo.md#Dubbo)**                        |                                                |                                                         |                                              |                                                        |                                                        |
+| **[Dubbo](/RPC/Dubbo.md#Dubbo)**                        | **[FastDFS](/RPC/FastDFS.md#FastDFS)**         |                                                         |                                              |                                                        |                                                        |
+
+# 面试专区
+
+| **[Java面试题更新中...](/java/java面试题#Java面试题)** |
+| ------------------------------------------------------ |
+| **[Mysql面试题待更新...](preparing)**                  |
 
 
 
-- **java高并发,redis,缓存中间件,面试题等会陆续上架,敬请关注....**
+- **java高并发,redis,缓存中间件,一些面试题等会陆续上架,敬请关注....**
 
 以上是按照我学习时的顺序开始写的,抽出了一些时间整理了一下,方便自己也方便他人,网站内容会持续更新,最新动态会先发布于个人博客---[CodeMartain ](https://blog.csdn.net/weixin_54061333?spm=1010.2135.3001.5421)上,欢迎光临;
 
