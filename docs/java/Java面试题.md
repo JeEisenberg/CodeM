@@ -243,9 +243,9 @@ LinkedList查找元素时需要从头使用遍历，效率一般。 LinkedList�
 
 ## 11,聊一下HashMap
 
-- hashmap的底层实现
+- **hashmap的底层实现**
 
-**底层是数组+链表**
+底层是数组+链表
 
 数组中存放的的entry<key,value>
 
@@ -257,7 +257,8 @@ LinkedList查找元素时需要从头使用遍历，效率一般。 LinkedList�
 
 
 
-hashmap的put方法:
+- **hashmap的put方法:**
+
 
 new hashMap()一开始是一个空数组,在调用push的时候会检查数组是否为空,如果为空,就会初始化数组,这个跟list类似;然后检查key是否为null,不为null则根据key算出一个值,这个值跟数组的长度 做位与操作;
 
@@ -330,7 +331,8 @@ int index=key.hashcode&table.length-1 ;~根据key算出一个hash值,然后跟�
     }
 ```
 
-为什么数组的大小一定要是2的幂次方?
+- **为什么数组的大小一定要是2的幂次方?**
+
 
 因为hashmap在存储数据时会根据key的值算出一个hashcode,然后跟数组的长度减一 做位与操作
 
@@ -361,7 +363,8 @@ int index=key.hashcode&table.length-1 ;~根据key算出一个hash值,然后跟�
 
 [hashmap扩容机制~](https://blog.csdn.net/weixin_54061333/article/details/118998336)
 
-**hashmap初始化过程**
+- **hashmap初始化过程**
+
 
 1,当新建一个hashmap时,如果没有被分配即指定初始容量,
 
@@ -503,6 +506,321 @@ do {
 
 如果值为非0的话，则让 hiHead 和 hiTail 指向该节点。完成遍历后，可能会得到两条链表，此时就完成了链表分组：
 
-最后再将这两条链接存放到相应的位置中，完成扩容。如下图：
+最后再将这两条链接存放到相应的位置中，完成扩容。
 
- 
+
+
+- **HashMap中的modcount是干什么用的?**
+
+> 由于反映HashMap结构被修改的次数   
+
+
+
+put,remove操作做都会引发modcount的变化;
+
+```java
+import java.util.HashMap;
+public class mianshi {
+    public static void main(String[] args) {
+   HashMap<String, String> map = new HashMap<>();
+        map.put("1", "1");
+        map.put("3", "3");
+        for (String string : map.keySet()) {//modcount=2
+            if (string.equals("1"))//modcount=2
+                map.remove("1");//移除后//modcount=3
+        }
+
+        /** if (modCount != expectedModCount)//
+                throw new ConcurrentModificationException();*/
+    }
+}
+```
+
+这代码可能会报异常,ConcurrentModificationException~并发修改异常
+
+```c
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+Exception in thread "main" java.util.ConcurrentModificationException
+        at java.base/java.util.HashMap$HashIterator.nextNode(HashMap.java:1493)
+        at java.base/java.util.HashMap$KeyIterator.next(HashMap.java:1516)
+        at mianshi.main(mianshi.java:9)
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/1c402bb53afa469a8c522de8eb0d1cd8.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+因为hashmap在put数据时会修改 modcount,
+
+```java
+  map.put("1", "1");//modcoount++
+        map.put("3", "3");   // 之后modcount变为了2,
+```
+
+之后遍历map,在遍历的时候执行了remove操作.相当于又有一次修改了modcount,这跟遍历的时候modcount值不匹配,于是就会报并发修改错误;
+
+```java
+if (string.equals("1"))
+                map.remove("1");//modcoount++
+```
+
+发生在现实的实际情况是当一个线程在遍历map,另一个线程在修改map,就可能发生并发修改异常;
+
+
+
+那如果遍历时候移除的情况如下~会报异常吗?
+
+```java
+  if (string.equals("3"))
+                map.remove("1");
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/4bac7aec2bf648fb9632c9f6d52c8ff8.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+本例中~
+
+异常的发生跟遍历时元素的位置有关了,只要是.equals("1") 的,移除在他之前的元素(或者本元素"1")都会报并发修改异常,
+
+.equals("3"),由于是首位,所以并不会包并发修改异常;
+
+> modcount的改变,代表map被修改了,当个有多个线程参与时,就有可能发生并发修改异常:
+
+源码~
+
+```java
+   // iterators
+    abstract class HashIterator {
+        Node<K,V> next;        // next entry to return
+        Node<K,V> current;     // current entry
+        int expectedModCount;  // for fast-fail
+        int index;             // current slot
+HashIterator() {
+            expectedModCount = modCount;//在迭代时及逆行modcount赋值,一旦发现modCount与expectedModCount值不一样,就会报并发修改异常
+            Node<K,V>[] t = table;
+            current = next = null;
+            index = 0;
+            if (t != null && size > 0) { // advance to first entry
+                do {} while (index < t.length && (next = t[index++]) == null);
+            }
+        }
+        ............
+         final Node<K,V> nextNode() {
+            Node<K,V>[] t;
+            Node<K,V> e = next;
+            if (modCount != expectedModCount)//
+                throw new ConcurrentModificationException();
+            if (e == null)
+                throw new NoSuchElementException();
+            if ((next = (current = e).next) == null && (t = table) != null) {
+                do {} while (index < t.length && (next = t[index++]) == null);
+            }
+            return e;
+        }
+```
+
+
+
+**ConcurrentHashMap**
+
+支持完全并发检索和更新的高预期并发性的哈希表。 
+
+key与value都不能为null
+
+源码~
+
+```java
+  public V put(K key, V value) {
+        return putVal(key, value, false);
+    }
+
+    /** Implementation for put and putIfAbsent */
+    final V putVal(K key, V value, boolean onlyIfAbsent) {
+        if (key == null || value == null) throw new NullPointerException();
+        int hash = spread(key.hashCode());
+        int binCount = 0;
+        for (Node<K,V>[] tab = table;;) {
+            Node<K,V> f; int n, i, fh; K fk; V fv;
+            if (tab == null || (n = tab.length) == 0)
+                tab = initTable();
+            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
+                if (casTabAt(tab, i, null, new Node<K,V>(hash, key, value)))
+                    break;                   // no lock when adding to empty bin
+            }
+            else if ((fh = f.hash) == MOVED)
+                tab = helpTransfer(tab, f);
+            else if (onlyIfAbsent // check first node without acquiring lock
+                     && fh == hash
+                     && ((fk = f.key) == key || (fk != null && key.equals(fk)))
+                     && (fv = f.val) != null)
+                return fv;
+            else {
+                V oldVal = null;
+                synchronized (f) {
+                    if (tabAt(tab, i) == f) {
+                        if (fh >= 0) {
+                            binCount = 1;
+                            for (Node<K,V> e = f;; ++binCount) {
+                                K ek;
+                                if (e.hash == hash &&
+                                    ((ek = e.key) == key ||
+                                     (ek != null && key.equals(ek)))) {
+                                    oldVal = e.val;
+                                    if (!onlyIfAbsent)
+                                        e.val = value;
+                                    break;
+                                }
+                                Node<K,V> pred = e;
+                                if ((e = e.next) == null) {
+                                    pred.next = new Node<K,V>(hash, key, value);
+                                    break;
+                                }
+                            }
+                        }
+                        else if (f instanceof TreeBin) {
+                            Node<K,V> p;
+                            binCount = 2;
+                            if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,
+                                                           value)) != null) {
+                                oldVal = p.val;
+                                if (!onlyIfAbsent)
+                                    p.val = value;
+                            }
+                        }
+                        else if (f instanceof ReservationNode)
+                            throw new IllegalStateException("Recursive update");
+                    }
+                }
+                if (binCount != 0) {
+                    if (binCount >= TREEIFY_THRESHOLD)
+                        treeifyBin(tab, i);
+                    if (oldVal != null)
+                        return oldVal;
+                    break;
+                }
+            }
+        }
+        addCount(1L, binCount);
+        return null;
+    }
+```
+
+
+
+**HashTable**
+
+支持并发,但是效率比ConcurrentHashMap低
+
+key/value 也不能为 null
+
+```c
+Any non- object can be used as a key or as a value
+```
+
+```java
+  public synchronized V put(K key, V value) {
+        // Make sure the value is not null
+        if (value == null) {
+            throw new NullPointerException();
+        }
+```
+
+hashtable与ConcurrentHashMap的锁的粒度不一样;
+
+
+
+在Collecctions工具类中有线程安全的方法~
+
+```java
+Collections.synchronizedMap(new HashMap<>());
+```
+
+
+
+将一些方法加上锁~这个跟hashtable一样;
+
+```jV
+        public V put(K key, V value) {
+            synchronized (mutex) {return m.put(key, value);}
+        }
+```
+
+> 在高并发的情况下ConcurrentHashMap 性能优于其他两个同步map;
+
+
+
+**总结~HashMap 和 HashTable**
+
+相同点:
+
+HashMap 和 HashTable 都是基于哈希表实现的，其内部每个元素都是 `key-value` 键值对，HashMap 和 HashTable 都实现了 Map、Cloneable、Serializable 接口。 
+
+不同点:
+
+- 父类不同：HashMap 继承了 `AbstractMap` 类，而 HashTable 继承了 `Dictionary` 类
+
+- hashmap与hashtable的初始容量不同：
+
+> HashTable 的初始长度是11，之后每次扩充容量变为之前的 2n+1（n为上一次的长度）而 HashMap 的初始长度为16，之后每次扩充变为原来的两倍。创建时，如果给定了容量初始值，那么HashTable 会直接使用你给定的大小，而 HashMap 会将其扩充为2的幂次方大小。
+
+```java
+public Hashtable() {
+    this(11, 0.75f);
+}
+```
+
+```java
+  /**
+     * Constructs an empty {@code HashMap} with the default initial capacity
+     * (16) and the default load factor (0.75).
+     */
+    public HashMap() {
+        this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
+    }
+
+........
+        
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+        Node<K,V>[] tab; Node<K,V> p; int n, i;
+        if ((tab = table) == null || (n = tab.length) == 0)
+            n = (tab = resize()).length;
+
+```
+
+hashtable当count大于threshold时或触发rehash
+
+```java
+protected void rehash() {
+    int oldCapacity = table.length;
+    Entry<?,?>[] oldMap = table;
+
+    // overflow-conscious code
+    int newCapacity = (oldCapacity << 1) + 1;
+    if (newCapacity - MAX_ARRAY_SIZE > 0) {
+        if (oldCapacity == MAX_ARRAY_SIZE)
+            // Keep running with MAX_ARRAY_SIZE buckets
+            return;
+        newCapacity = MAX_ARRAY_SIZE;
+    }
+```
+
+- 空值不同：
+
+> HashMap 允许空的 key 和 value 值，HashTable 不允许空的 key 和 value 值。HashMap 会把 Null key 当做普通的 key 对待。不允许 null key 重复。
+
+hashmap 允许为 null ,当key为 null时做0处理
+
+```java
+static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+```
+
+- 线程安全性：
+
+> HashMap 不是线程安全的，如果多个外部操作同时修改 HashMap 的数据结构比如 add 或者是 delete，必须进行同步操作，仅仅对 key 或者 value 的修改不是改变数据结构的操作。可以选择构造线程安全的 Map 比如 `Collections.synchronizedMap` 或者是 `ConcurrentHashMap`。而 HashTable 本身就是线程安全的容器。
+
+- 性能方面：
+
+> 虽然 HashMap 和 HashTable 都是基于`单链表`的，但是 HashMap 进行 put 或者 get􏱤 操作，可以达到常数时间的性能；而 HashTable 的 put 和 get 操作都是加了 `synchronized` 锁的，所以效率很差。
