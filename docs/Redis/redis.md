@@ -1,6 +1,7 @@
-@[TOC](Redis)
+# Redis
 
-# Redis简介
+<div  align="center" ><iframe   style="width: 648px; height: 502px;" src="https://static-1dc1ff96-3039-4172-bd07-ecab5ac52a93.bspapp.com/ "></iframe></div>
+
 >Redis 是一个开源（BSD许可）的，**内存中的数据结构存储系统**，它可以用作**数据库、缓存和消息中间件**。 
 
 >它支持多种类型的数据结构~~如 **字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted sets） 与范围查询， bitmaps， hyperloglogs 和 地理空间（geospatial） 索引半径查询**。
@@ -97,9 +98,9 @@ tar -zxf redis-6.0.6.tar.gz
 ```
 
  - **5,编译安装Redis**
-  进入redis解压后的目录  执行 ~`make`   进行编译
-  ![在这里插入图片描述](https://img-blog.csdnimg.cn/d888ea8ebd42421aa5e15038803e3ce4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
-  编译结束后进行安装
+    进入redis解压后的目录  执行 ~`make`   进行编译
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/d888ea8ebd42421aa5e15038803e3ce4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+    编译结束后进行安装
 >make install PREFIX=/usr/local/redis
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2c23f496675f4e3790a8f7feacbf0d4b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
@@ -113,7 +114,7 @@ redis安装就结束了;
 
 
  - **6,配置redis**
-  将配置文件/usr/local/redis-6.0.6/redis.conf 复制到/usr/local/redis/bin/
+    将配置文件/usr/local/redis-6.0.6/redis.conf 复制到/usr/local/redis/bin/
 
 >cp /usr/local/redis-6.0.6/redis.conf   /usr/local/redis/bin/
 
@@ -176,15 +177,15 @@ IPv4和IPv6环回地址是127.0.0.1和::1，并且来自Unix域套接字。
         Redis支持的五大数据类型包括String（字符串  用法： 键  值），Hash（哈希 类似Java中的 map  用法： 键  键值对），List（列表  用法：键 集合 不可以重复），Set（集合 用法：键 集合 可以重复），Zset（sorted set 有序集合    用法： 键  值 值）
 
  - **String(字符串)**
-  redis中的最**基本数据类型**,redis中的string 跟java中的字符串是有区别的,在redis中字符串是**二进制存储的**,可以**包含任何数据**,比如图片,视频或者任何序列化对象;
-  string类型的**值最大能存储512MB;**
+    redis中的最**基本数据类型**,redis中的string 跟java中的字符串是有区别的,在redis中字符串是**二进制存储的**,可以**包含任何数据**,比如图片,视频或者任何序列化对象;
+    string类型的**值最大能存储512MB;**
 
 应用场景：  
 
 >String是最常用的一种数据类型，普通的key/value存储都可以归为此类，value其实不仅是String，也可以是数字：比如想知道什么时候封锁一个IP地址(访问超过几次)。  
 
  - **Hash(哈希)**
-  Redis hash 是一个**键值(key=>value)对集合**。
+    Redis hash 是一个**键值(key=>value)对集合**。
 
 Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别适合用于存储对象。
   使用场景：
@@ -192,7 +193,7 @@ Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别
   > >
 
  - **List(列表)**
-  Redis 列表是简单的**字符串列表**，**按照插入顺序排序**。你可以添加一个元素到列表的头部（左边）或者尾部（右边）。
+    Redis 列表是简单的**字符串列表**，**按照插入顺序排序**。你可以添加一个元素到列表的头部（左边）或者尾部（右边）。
 
 应用场景:
 >利用List实现最新消息排行等功能:
@@ -200,7 +201,7 @@ Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别
 > List的另一个应用就是消息队列，可以利用Lists的PUSH操作，将任务存在Lists中，然后工作线程再用POP操作将任务取出进行执行。  
 
  - **Set（集合）**
-  Set是**string类型的无序集合**。
+    Set是**string类型的无序集合**。
 
 使用场景：
 >共同好友、二度好友 
@@ -217,7 +218,7 @@ Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别
 >除此之外,Redis还为集合提供了求交集、并集、差集等操作; 
 
  - **zset(sorted set：有序集合)**
-  Redis zset 和 set 一样也是**string类型元素的集合**,且**不允许重复**的成员。不同的是每个元素都会**关联一个double类型的分数**。redis正是通过分数来为集合中的成员进行从小到大的排序。zset的成员是唯一的,但分数(score)却可以重复。
+    Redis zset 和 set 一样也是**string类型元素的集合**,且**不允许重复**的成员。不同的是每个元素都会**关联一个double类型的分数**。redis正是通过分数来为集合中的成员进行从小到大的排序。zset的成员是唯一的,但分数(score)却可以重复。
 
 使用场景：
 >带有权重的元素，比如一个游戏的用户得分排行榜 ;
@@ -227,6 +228,7 @@ Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别
 
 ## Redis常用命令
 Redis命令手册~
+
  1.https://www.redis.net.cn/order/
 
   2.http://doc.redisfans.com/
@@ -241,8 +243,8 @@ Redis命令手册~
 设置key--value
 
  - **set key  value  与get key**
-  set key   若key相同,则覆盖掉之前的,
-  get key 若没有,返回 nli,
+    set key   若key相同,则覆盖掉之前的,
+    get key 若没有,返回 nli,
 ```c
 127.0.0.1:6379> set name 扎根三
 OK
@@ -301,7 +303,7 @@ exists key或者exists [key1 key2 ...... ]
 ```
 
  - **persist**
-  移除 key 的过期时间，key 将持久保持。
+    移除 key 的过期时间，key 将持久保持。
 
 ```c
 127.0.0.1:6379> expire class 60 #设置过期时间60s
@@ -315,9 +317,9 @@ exists key或者exists [key1 key2 ...... ]
 ```
 
  - **ttl**
-  查看key的剩余过期时间
-  语法：ttl key
-  返回值：返回剩余时间，如果不过期返回-1
+    查看key的剩余过期时间
+    语法：ttl key
+    返回值：返回剩余时间，如果不过期返回-1
 ```c
 127.0.0.1:6379> expire age 60
 (integer) 1
@@ -347,10 +349,10 @@ OK
 ```
 
  - **keys**
-  查找所有符合给定模式( pattern)的 key 。
-  语法  keys pattern
-  返回值   array
-  empty array ~~没有符合条件的
+    查找所有符合给定模式( pattern)的 key 。
+    语法  keys pattern
+    返回值   array
+    empty array ~~没有符合条件的
 
 ```c
 127.0.0.1:6379> set name zha
@@ -368,9 +370,9 @@ OK
 ```
 
  - **rename**
-  给 key重命名,
-  语法  rename key newkey
-  返回值   array
+    给 key重命名,
+    语法  rename key newkey
+    返回值   array
 >可以随便你改名,如果重名了,则会覆盖掉之前的键值对
 ```c
 127.0.0.1:6379> set name2 dan
@@ -402,7 +404,7 @@ OK
 ```
 
  - **dump**
-  序列化给定 key ，并返回被序列化的值。
+    序列化给定 key ，并返回被序列化的值。
 ```c
 127.0.0.1:6379> dump 1
 "\x00\xc0\x01\t\x00\xf6\x8a\xb6z\x85\x87rM"
@@ -411,7 +413,7 @@ OK
 127.0.0.1:6379> 
 ```
  - **randomkey**
-  从当前数据库中随机返回一个 key 。
+    从当前数据库中随机返回一个 key 。
 
 ```c
 127.0.0.1:6379> randomkey
@@ -424,7 +426,7 @@ OK
 set get 略
 
  - **setnx**
-  当且仅当key不存在时才新增。
+    当且仅当key不存在时才新增。
 
    语法：setnx key value
 
@@ -439,7 +441,7 @@ set get 略
 ```
 
  - **setex**
-  设置key的存活时间，无论是否存在指定key都能新增，如果存在key覆盖旧值。同时必须指定过期时间。
+    设置key的存活时间，无论是否存在指定key都能新增，如果存在key覆盖旧值。同时必须指定过期时间。
 >将值 value 关联到 key ，并将 key 的过期时间设为 seconds (以秒为单位)。
 ```c
 127.0.0.1:6379> setex math 10 100
@@ -460,7 +462,7 @@ OK
 ```
 
  - **mget**
-  获取所有(一个或多个)给定 key 的值。
+    获取所有(一个或多个)给定 key 的值。
 ```c
 127.0.0.1:6379> mget name age gender
 1) "lisi"
@@ -501,9 +503,9 @@ OK
 ```
 
  - **setrange**
-  用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始。
-  字符串值的替换,
-  返回字符串的长度;
+    用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始。
+    字符串值的替换,
+    返回字符串的长度;
 ```c
 127.0.0.1:6379> setrange age 5 8888
 (integer) 9
@@ -535,8 +537,8 @@ Hash类型的值中包含多组field value。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/ecbc5d1276f146149bee70b3b9a641b0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
  - **hset**
-  将哈希表 key 中的字段 field 的值设为 value 
-  类似于 像类中的属性设置值;
+    将哈希表 key 中的字段 field 的值设为 value 
+    类似于 像类中的属性设置值;
 ```c
 127.0.0.1:6379> hset people name wangwu age 12
 (integer) 2
@@ -567,7 +569,7 @@ OK
 ```
 
  - **hgetall**
-  获取在哈希表中指定 key 的所有字段和值
+    获取在哈希表中指定 key 的所有字段和值
 ```c
 127.0.0.1:6379> hgetall fruit
 1) "name"
@@ -596,7 +598,7 @@ OK
 ### List(列表)操作
 >list下标从0 开始
  - **lpush**
-  将一个或多个值插入到列表头部
+    将一个或多个值插入到列表头部
 ```c
 127.0.0.1:6379> lpush list1 1 2 3 4
 (integer) 4#返回list长度
@@ -604,7 +606,7 @@ OK
 (integer) 2
 ```
  - **rpush**
-  在列表中添加一个或多个值~尾部
+    在列表中添加一个或多个值~尾部
 
 ```c
 127.0.0.1:6379> rpush list1 7 8 9 10
@@ -612,14 +614,14 @@ OK
 ```
 
  - **llen**
-  获取列表长度
+    获取列表长度
 ```c
 127.0.0.1:6379> llen list1
 (integer) 7
 ```
 
  - **lrange**
-  获取列表指定范围内的元素
+    获取列表指定范围内的元素
 ```c
 127.0.0.1:6379> lrange list1 5 10
 1) "8"
@@ -629,9 +631,9 @@ OK
 ```
 
  - **lrem**
-  语法: lrem key count element
-  删除列表中元素。count为正数表示从左往右删除的数量。负数从右往左删除的数量。
-  返回值:删除的元素数量;
+    语法: lrem key count element
+    删除列表中元素。count为正数表示从左往右删除的数量。负数从右往左删除的数量。
+    返回值:删除的元素数量;
 ```c
 127.0.0.1:6379> lrem list1 -2 2
 (integer) 1
@@ -639,7 +641,7 @@ OK
 ```
 
  - **ltrim**
-  对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。
+    对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。
 
 
 ```c
@@ -675,7 +677,7 @@ OK #此处是下标的范围
 ### set(集合)操作
 
  - **sadd**
-  像集合中添加内容,不允许重复
+    像集合中添加内容,不允许重复
 
 ```c
 127.0.0.1:6379> sadd  foods bread fish 
@@ -683,13 +685,13 @@ OK #此处是下标的范围
 ```
 
  - **scard**
-  获取集合的成员数
+    获取集合的成员数
 ```c
 127.0.0.1:6379> scard foods
 (integer) 2
 ```
  - **sunion**
-  返回所有给定集合的并集
+    返回所有给定集合的并集
 ```c
 127.0.0.1:6379> sunion man person foods
 1) "fish"
@@ -713,7 +715,7 @@ OK #此处是下标的范围
 127.0.0.1:6379> 
 ```
  - **smembers**
-  返回集合中所有成员
+    返回集合中所有成员
 ```c
 127.0.0.1:6379> smembers  man
 1) "child"
@@ -723,7 +725,7 @@ OK #此处是下标的范围
 ```
 
  - **sinter**
-  返回给定集合的交集
+    返回给定集合的交集
 ```c
 127.0.0.1:6379> sinter man person foods
 (empty array)
@@ -732,7 +734,7 @@ OK #此处是下标的范围
 2) "woman"
 ```
  - **srem**
-  移除集合中的一个或多个元素
+    移除集合中的一个或多个元素
 ```c
 127.0.0.1:6379> srem man child
 (integer) 1
@@ -742,8 +744,8 @@ OK #此处是下标的范围
 ```
 
  - **smove**
-  将 member 元素从 source 集合移动到 destination 集合
-  如果目标中已存在该元素则操作失败;
+    将 member 元素从 source 集合移动到 destination 集合
+    如果目标中已存在该元素则操作失败;
 ```c
 127.0.0.1:6379> sadd man man woman
 (integer) 2
@@ -753,7 +755,7 @@ OK #此处是下标的范围
 (integer) 1
 ```
  - **sdiff**
-  返回集合差集
+    返回集合差集
 ```c
 127.0.0.1:6379> sdiff foods man
 1) "bread"
@@ -767,7 +769,7 @@ OK #此处是下标的范围
 
 ```
  - **sismember**
-  判断 member 元素是否是集合 key 的成员
+    判断 member 元素是否是集合 key 的成员
 ```c
 127.0.0.1:6379> sismember foods bread
 (integer) 1
@@ -776,7 +778,7 @@ OK #此处是下标的范围
 ```
 
  - **sdiffstore**
-  返回给定所有集合的差集并存储在 destination 中
+    返回给定所有集合的差集并存储在 destination 中
 
 ```c
 127.0.0.1:6379> smembers lin
@@ -796,8 +798,8 @@ OK #此处是下标的范围
 同理由sinterstore和sunionstore
 
  - **sscan**
-  迭代集合中的元素
-  语法格式: sscan  key  
+    迭代集合中的元素
+    语法格式: sscan  key  
 ```c
 127.0.0.1:6379> sscan lin 0 match l*
 1) "0"
@@ -837,9 +839,9 @@ OK #此处是下标的范围
 ```
 
  - **zrange**
-  返回区间内容，withscores表示带有分数
-  zrange key 区间 [withscores]
-  返回值:值列表
+    返回区间内容，withscores表示带有分数
+    zrange key 区间 [withscores]
+    返回值:值列表
 ```c
 127.0.0.1:6379> zrange book 0 -1 
 1) "wangwu"
@@ -859,7 +861,7 @@ OK #此处是下标的范围
 ```
 
  - **zscore**
-  返回有序集中，成员的分数值
+    返回有序集中，成员的分数值
 
 ```c
 127.0.0.1:6379> zscore book wangwu  #zscore key value
@@ -867,7 +869,7 @@ OK #此处是下标的范围
 ```
 
  - **zrangebyscore**
-  通过分数返回有序集合指定区间内的成员
+    通过分数返回有序集合指定区间内的成员
 >Redis Zrangebyscore 返回有序集合中指定分数区间的成员列表。有序集成员按分数值递增(从小到大)次序排列。
 
 >具有相同分数值的成员按字典序来排列(该属性是有序集提供的，不需要额外的计算)。
@@ -897,7 +899,7 @@ OK #此处是下标的范围
 ```
 
  - **zinterstore**
-  计算给定的一个或多个有序集的交集，其中给定 key 的数量必须以 numkeys 参数指定，并将该交集(结果集)储存到 destination 。
+    计算给定的一个或多个有序集的交集，其中给定 key 的数量必须以 numkeys 参数指定，并将该交集(结果集)储存到 destination 。
 
 默认情况下，结果集中某个成员的分数值是所有给定集下该成员分数值之和。
 zinterstore destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
@@ -916,7 +918,7 @@ zinterstore destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGG
 ```
 
  - **zscan**
-  迭代有序集合中的元素（包括元素成员和元素分值）
+    迭代有序集合中的元素（包括元素成员和元素分值）
 ```c
 127.0.0.1:6379> zscan boo 0 match w* count 5
 1) "0"
@@ -926,7 +928,7 @@ zinterstore destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGG
 ```
 
  - **zrem**
-  移除有序集合中的一个或多个成员
+    移除有序集合中的一个或多个成员
 
 ```c
 127.0.0.1:6379> zrem boo wangwu
@@ -1014,13 +1016,13 @@ zrangebylex 返回指定成员区间内的成员，**按成员字典正序排序
 ### Redis连接命令
 
  - **echo**
-  打印字符串
+    打印字符串
 ```c
 127.0.0.1:6379> echo hello
 "hello"
 ```
  - **select**
-  切换数据库
+    切换数据库
 ```c
 127.0.0.1:6379> set db_number 0 # 为数据库分配编号 默认使用0 号数据库
 OK
@@ -1049,7 +1051,7 @@ OK
 ```
 
  - **ping**
-  Ping 命令使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG 。也可以自定义 message
+    Ping 命令使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG 。也可以自定义 message
 
 >通常用于测试与服务器的连接是否仍然生效，或者用于测量延迟值。
 ```c
@@ -1063,13 +1065,13 @@ Could not connect to Redis at 127.0.0.1:6379: Connection refused
 ```
 
  - **quit**
-  关闭与当前客户端与redis服务的连接。
-  如果还有未完成的事务则等待,一旦所有等待中的回复(如果有的话)顺利写入到客户端，连接就会被关闭。
+    关闭与当前客户端与redis服务的连接。
+    如果还有未完成的事务则等待,一旦所有等待中的回复(如果有的话)顺利写入到客户端，连接就会被关闭。
 ```c
 redis 127.0.0.1:6379> quit
 ```
  - **auth**
-  检测给定的密码和配置文件中的密码是否相符~默认没有密码
+    检测给定的密码和配置文件中的密码是否相符~默认没有密码
 ```c
 127.0.0.1:6379> auth password
 (error) ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
@@ -1101,7 +1103,7 @@ OK
 ```
 
  - **save与bgsave**
-  保存当前内存快照
+    保存当前内存快照
 >save 命令执行一个**同步保存**操作，将当前 Redis 实例的所有数据快照(snapshot)以 RDB 文件的形式保存到硬盘。
 >bgsave 在后台异步保存当前数据库的数据到磁盘。
 
@@ -1633,211 +1635,6 @@ java代码连接redis集群
 Jedis 为一些 Redis 模块提供支持，最著名的是 [RedisJSON](https://oss.redis.com/redisjson/) 和 [RediSearch](https://oss.redis.com/redisearch/)。
 
 有关详细信息，请参阅 [RedisJSON Jedis](https://github.com/redis/jedis/blob/master/docs/redisjson.md) 快速入门。
-
-
-
-
-
-## Spring整合redis
-
-Spring Data 好处很方便操作对象类型。	把Redis不同值得类型放到一个opsForXXX方法中。
-
-		opsForValue : String值
-	
-		opsForList : 列表List
-	
-		opsForHash: 哈希表Hash
-	
-		opsForZSet: 有序集合Sorted Set
-	
-		opsForSet : 集合
-
-
-导入依赖
-```xml
-<!--redis启动器 其他不做描述--> 
-              <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>2.6.4</version>
-            </dependency>
-           
-             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>2.6.4</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter</artifactId>
-                <version>5.8.2</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>2.6.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>2.2.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.22</version>
-            </dependency>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.28</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-thymeleaf</artifactId>
-                <version>2.6.4</version>
-            </dependency>
- 
-```
-
-跟之前的架构一样,
-这里只展示关键代码~
-
-
-定义一个redis配置类
-
-```java
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-/**
- * @author Gavin
- */
-@Configuration
-public class redisConfigration {
-
-    @Bean
-   // redis模板 (传入一个redis连接工厂接口)
-    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory factory){
-//        固定写法
-//实例化有一个redis模板对象
-        RedisTemplate<String,Object> redisTemplate= new RedisTemplate<String, Object>();
-
-        redisTemplate.setConnectionFactory(factory);
-        //将key序列化后传入  key是字符串
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        //将值传入redis
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
-       // 返回redis模板
-        return redisTemplate;
-    }
-}
-```
-服务实现
-```java
-package com.gavin.service.impl;
-
-import com.gavin.mapper.GoodsMapper;
-import com.gavin.pojo.Goods;
-import com.gavin.service.redisService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.stereotype.Service;
-
-@Service
-public class redisServiceImpl implements redisService {
-
-    @Autowired
-    private GoodsMapper goodsMappper;
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Override
-    public Goods selectById(Integer id) {
-//        先从redis中获取数据
-        String key = "Goods:" + id;
-        if (redisTemplate.hasKey(key)) {
-            System.out.println("执行缓存查找");
-            redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Goods>(Goods.class));
-            Goods goods = (Goods) redisTemplate.opsForValue().get(key);
-            return goods;
-        }
-        System.out.println("执行了mysql");
-        Goods goods = goodsMappper.selectByPrimaryKey(id);
-
-        //将数据放入redis
-        redisTemplate.opsForValue().set(key,goods);
-        return goods;
-    }
-}
-
-```
-controller层
-
-```java
-import com.gavin.pojo.Goods;
-import com.gavin.service.redisService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-/**
- * @author Gavin
- */
-@Controller
-public class RedisController {
-    @Autowired
-    private redisService redisService;
-
-@RequestMapping("/goods")
-    public String selectById(Integer id, Model model) {
-
-    Goods goods = redisService.selectById(id);
-    model.addAttribute("goods",goods);
-    return "index";
-}
-}
-
-```
-application.yml
-
-```yml
-spring:
-    #配置数据源
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/gavin
-    username: gavin
-    password: 955945
-   #单机版redis设置
-  redis:
-    host: 192.168.135.145
-    port: 6379    
- #   redis集群配置
-  redis:
-    cluster:
-      nodes: 192.168.135.145:6789,192.168.135.145:6790,192.168.135.145:6791,192.168.135.145:6792,192.168.135.145:6793,192.168.135.145:6794
-
-mybatis:
-  #mapper位置
-  mapper-locations: classpath:/com.gavin.mapper/*.xml
-  #实体类别名
-  type-aliases-package: com.gavin.pojo
-
-```
-
-![在这里插入图片描述](https://img-blog.csdnimg.cn/d4a4e92a8e4249bcb6471c6418644ebd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
-
-
 
 ## Spring整合redis
 
