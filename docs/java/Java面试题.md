@@ -824,3 +824,45 @@ static final int hash(Object key) {
 - 性能方面：
 
 > 虽然 HashMap 和 HashTable 都是基于`单链表`的，但是 HashMap 进行 put 或者 get􏱤 操作，可以达到常数时间的性能；而 HashTable 的 put 和 get 操作都是加了 `synchronized` 锁的，所以效率很差。
+
+
+
+## 12,Spring
+
+spring是如何得到bean对象?
+
+> spring通过无参构造得到一个bean实例,然后通过依赖注入来给bean属性赋值;
+
+```java
+ Return the single internal BeanFactory held by this context(as ConfigurableListableBeanFactory).
+```
+
+底层使用Map<BeanName,Bean对象> 来盛放获得的bean对象,通过依赖注入为bean属性赋值;
+
+
+
+这样就能够保证了获得的bean的单例性~放入ConcurrentHashMap,如果要获得不同的bean实例对象则没必要放入该集合中,所以源码中会判断是否需要的是getSingleton
+
+```java
+    @Nullable
+    protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+        Object singletonObject = this.singletonObjects.get(beanName);//这里用到了ConcurrentHashMap
+                ...........
+        singletonObject = singletonFactory.getObject();
+                                this.earlySingletonObjects.put(beanName, singletonObject);
+                                this.singletonFactories.remove(beanName);
+                .........
+        return singletonObject;
+    }
+
+```
+
+```java
+public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
+    private final Map<String, Object> singletonObjects = new ConcurrentHashMap(256);
+    private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap(16);
+    private final Map<String, Object> earlySingletonObjects = new ConcurrentHashMap(16);
+  ......
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/0f1ec5564dc346cb978e703b8533c5d3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)

@@ -1765,5 +1765,16 @@ public class ApplicationDeptConsumer {
 > Dubbo2 **接口级服务发现**，以接口粒度组织地址数据
 > Dubbo3 格式的 Provider 地址不能被 Dubbo2 的 Consumer 识别到，反之 Dubbo2 的消费者也不能订阅到 Dubbo3 Provider。
 
-[应用级地址发现迁移指南](https://dubbo.apache.org/zh/docs/migration/migration-service-discovery/)
+## 应用级地址发现迁移指南
 
+<iframe   style="width: 648px; height: 502px;" src="https://dubbo.apache.org/zh/docs/migration/migration-service-discovery/ "></iframe></div>
+
+[应用级地址发现迁移指南 | Apache Dubbo](https://dubbo.apache.org/zh/docs/migration/migration-service-discovery/) 
+
+## Dubbo性能优化 & 基准测试
+
+<iframe   style="width: 648px; height: 502px;" src="https://dubbo.apache.org/zh/docs/performance/benchmarking/"></iframe></div>
+
+
+
+[性能优化 & 基准测试| Apache Dubbo](https://dubbo.apache.org/zh/docs/performance/benchmarking/)

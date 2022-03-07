@@ -1476,7 +1476,7 @@ redis-check-aof  redis.conf       sentinel-26380.conf
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/25baf269264d46bd8d420e2ed6cb7d70.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/a32950e55c554ba5a798591fbcdfe0ae.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
-## Java操作redis
+## Java操作redis~Jedis
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/cd3fadf3e88c47c898525a2bef3b5910.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
@@ -1578,8 +1578,6 @@ public class GenericObjectPoolConfig<T> extends BaseObjectPoolConfig<T> {
 
 >Jedis实例实现大多数 Redis 命令。
 
-[jedisAPI查看与下载](https://www.javadoc.io/doc/redis.clients/jedis/latest/redis/clients/jedis/Jedis.html)
-
 ### redis集群连接操作
 开启集群
 
@@ -1635,6 +1633,10 @@ java代码连接redis集群
 Jedis 为一些 Redis 模块提供支持，最著名的是 [RedisJSON](https://oss.redis.com/redisjson/) 和 [RediSearch](https://oss.redis.com/redisearch/)。
 
 有关详细信息，请参阅 [RedisJSON Jedis](https://github.com/redis/jedis/blob/master/docs/redisjson.md) 快速入门。
+
+### Jedis-latest-API
+
+<div  align="center" ><iframe   style="width: 648px; height: 502px;" src="https://www.javadoc.io/doc/redis.clients/jedis/latest/index.html"></iframe></div>
 
 ## Spring整合redis
 
@@ -1855,3 +1857,17 @@ mybatis:
     }
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/e4eaa2bff6ed43efa0405fd2c5e7f813.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+## Redis工具
+
+### Spring Data Redis 2.6.2 API
+
+<iframe   style="width: 648px; height: 502px;" src="https://docs.spring.io/spring-data/data-redis/docs/current/api/"></iframe></div>
+
+
+
+### Redis内存计算器
+
+<iframe   style="width: 648px; height: 502px;" src="http://www.redis.cn/redis_memory/"></iframe></div>
