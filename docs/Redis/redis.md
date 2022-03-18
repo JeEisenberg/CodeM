@@ -1,4 +1,4 @@
-# Redis
+# Redis基础
 
 <div  align="center" ><iframe   style="width: 648px; height: 502px;" src="https://static-1dc1ff96-3039-4172-bd07-ecab5ac52a93.bspapp.com/ "></iframe></div>
 
@@ -101,7 +101,7 @@ tar -zxf redis-6.0.6.tar.gz
     进入redis解压后的目录  执行 ~`make`   进行编译
     ![在这里插入图片描述](https://img-blog.csdnimg.cn/d888ea8ebd42421aa5e15038803e3ce4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
     编译结束后进行安装
->make install PREFIX=/usr/local/redis
+>sudo make install PREFIX=/usr/local/redis
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2c23f496675f4e3790a8f7feacbf0d4b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 redis安装就结束了;
@@ -190,7 +190,6 @@ IPv4和IPv6环回地址是127.0.0.1和::1，并且来自Unix域套接字。
 Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别适合用于存储对象。
   使用场景：
   >存储、读取、修改用户属性  
-  > >
 
  - **List(列表)**
     Redis 列表是简单的**字符串列表**，**按照插入顺序排序**。你可以添加一个元素到列表的头部（左边）或者尾部（右边）。
@@ -1276,7 +1275,7 @@ startup.sh中添加如下内容
 bash: ./startup.sh: Permission denied
 [root@localhost replica]# 
 ```
-权限不够
+centos提示权限不够 ,ubuntu 会提示 command找不到;
 赋予权限~`chmod a+x startup.sh`
 
 再次执行 startup.sh
@@ -1378,7 +1377,7 @@ repl_backlog_histlen:2128
 127.0.0.1:6380> 
 
 ```
-杀掉主后，整个节点无法在写数据，从身份不会变化，主的信息还是以前的信息。
+杀掉主后，整个节点无法在写入数据，从的身份也不会变化，主的信息还是以前的信息。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/d1ac5c6a7fcc4616bf435aad0ed73891.png)
 这时候我们需要搭建多哨兵;
 
@@ -1413,7 +1412,7 @@ repl_backlog_histlen:2128
 
 >logfile “/usr/local/sentinel/26379.log”
 
->sentinel monitor mymaster 192.168.93.10 6379 2
+>sentinel monitor mymaster 192.168.135.145 6379 2
 
 5,再复制两份sentinel.conf   分别命名为sentinel-26380.conf   sentinel-26381.conf   
 修改端口 为 26380   26381
@@ -1871,3 +1870,309 @@ mybatis:
 ### Redis内存计算器
 
 <iframe   style="width: 648px; height: 502px;" src="http://www.redis.cn/redis_memory/"></iframe></div>
+
+
+
+# Redis底层知识
+
+数据类型深入
+
+**Redis中的数据类型**
+
+key总是 string类型的
+
+所以判断key类型的时候其实是判断的value类型
+
+value的类型 有------
+
+String（字符串  用法： 键  值），
+
+Hash（哈希 类似Java中的 map  用法 键值对），
+
+List（列表  用法：键 集合 不可以重复），
+
+Set（集合 用法：键 集合 可以重复），
+
+Zset（sorted set 有序集合 ),
+
+
+
+但是redis在实际运用中远远不止这么些数据类型,为什么这么说呢?
+
+
+
+实际中生产中的数据类型
+
+运行一个的单机版的redis
+
+ set key value 
+
+设置 age 的值
+
+```
+127.0.0.1:6379> set age  5
+OK
+127.0.0.1:6379> get age
+"5"
+```
+
+我们看一下set的用法
+
+```
+127.0.0.1:6379> help set   
+  SET key value [EX seconds|PX milliseconds] [NX|XX] [KEEPTTL]
+  summary: Set the string value of a key
+  since: 1.0.0
+  group: string
+```
+
+那么这个name应该是什么类型的呢?
+
+应该是字符串类型的;
+
+```
+127.0.0.1:6379> type age
+string
+```
+
+type的用法
+
+```
+127.0.0.1:6379> help type
+
+  TYPE key
+
+  summary: Determine the type stored at key
+
+  since: 1.0.0
+
+  group: generic
+```
+
+可不可以给字符串加上一个值?按照我们实际认为的那样~5是一个数值
+
+```
+127.0.0.1:6379> incr age
+(integer) 6
+127.0.0.1:6379> get age
+"6"
+```
+
+
+
+但既然按照type命令,他告诉我们~5是一个字符串,那么可不可以在字符串后面追加内容?
+
+```
+127.0.0.1:6379> append age 999
+(integer) 4
+127.0.0.1:6379> get age
+"6999"
+```
+
+这个时候我们在判断他的类型
+
+```
+127.0.0.1:6379> type age
+string
+```
+
+好像一直都是string类型的;
+
+
+
+在底层他是怎样编码的呢?
+
+在 object命令下有一个encoding用于查看value底层编码
+
+```
+127.0.0.1:6379>  help object
+
+  OBJECT subcommand [arguments [arguments ...]]
+  summary: Inspect the internals of Redis objects
+  since: 2.2.3
+  group: generic
+```
+
+一开始设置值的时候我们查看他的底层编码~
+
+```
+127.0.0.1:6379> object encoding age
+"int"
+```
+
+但是在redis的五大数据类型中并没有int类型;
+
+在append之后age的数据类型
+
+```
+127.0.0.1:6379> object encoding age
+"raw"
+```
+
+再次执行 incr后age又变成了int
+
+```
+127.0.0.1:6379> incr age
+(integer) 7000
+127.0.0.1:6379> object encoding age
+"int"
+```
+
+实际上redis拿到数据后是以二进制编码的方式存储的;
+
+```
+127.0.0.1:6379> append age 中
+(integer) 7
+127.0.0.1:6379> get age
+"7000\xe4\xb8\xad"
+```
+
+一个汉字3个字节;
+
+二进制存储有什么好处呢?
+
+可以存任何数据类型,比如图片,视频或者任何序列化对象;
+
+string类型的值最大能存储512MB;
+
+另一个好处是能够做到二进制安全
+
+
+
+二进制安全
+
+什么是二进制安全?
+
+举个例子~ 
+
+设置一下price的值
+
+```
+127.0.0.1:6379> set price 1
+OK
+127.0.0.1:6379> get price
+"1"
+```
+
+字符串长度是多少?
+
+```
+127.0.0.1:6379> strlen price
+(integer) 1
+```
+
+strlen的用法
+
+```
+127.0.0.1:6379> help strlen
+
+  STRLEN key
+  summary: Get the length of the value stored in a key
+  since: 2.2.0
+  group: string
+```
+
+这个时候我们用incrby 来实现一个增量9
+
+```
+127.0.0.1:6379> incrby price 9
+(integer) 10
+```
+
+这个时候的长度是多少?
+
+```
+127.0.0.1:6379> strlen price
+(integer) 2
+```
+
+在不同的语言中,数据类型所占的位宽有时候是不一样的,各个类型的变量长度是由编译器来决定的;
+
+在java中 int占4字节,可能别的语言占用两个字节,这样就有可能发生字段溢出的错误;
+
+发生的情形~
+
+先做一个假设,redis中存储的value数据类型有int,1个int类型占4字节,编译器编译后value占4字节,某一个语言也用int数据去接这个数据,但是这个语言的int是占2字节的,这就会造成字段溢出;
+
+所以在redis中  set age  5 value并不会按照数值型数据存储,而是以字节存储的;
+
+当我们执行incr(或者其他增量命令时),首先会从内存中取出来先转换成数值类型,如果能够执行成功,则转换为甚至并执行增量,然后更新encoding编码;
+
+```
+127.0.0.1:6379> set k1 12
+OK
+127.0.0.1:6379> incr k1
+(integer) 13
+127.0.0.1:6379> set hello aaa
+OK
+127.0.0.1:6379> incr hello
+(error) ERR value is not an integer or out of range
+```
+
+
+
+当我们执行append的时候底层是识别为raw,
+
+```
+127.0.0.1:6379> append k1 12
+(integer) 4
+127.0.0.1:6379> type k1
+string
+127.0.0.1:6379> object encoding k1
+"raw"
+127.0.0.1:6379> incrby k1 12
+(integer) 1324
+127.0.0.1:6379> type k1
+string
+127.0.0.1:6379> object encoding k1
+"int"
+```
+
+再次执行增量之后,如果执行成功,则也会转为int;
+
+
+
+redis存储数据~字节流的体现
+
+以UTF-8编码
+
+```
+127.0.0.1:6379> set name 中
+OK
+127.0.0.1:6379> type name
+string
+127.0.0.1:6379> object encoding name
+"embstr"
+127.0.0.1:6379> strlen name
+(integer) 3
+127.0.0.1:6379>
+```
+
+
+
+
+
+修改编码格式为GBK ~这个时候strlen的长度为2
+
+```
+127.0.0.1:6379> set name 中
+OK
+127.0.0.1:6379> type name
+string
+127.0.0.1:6379> object encoding name
+"embstr"
+127.0.0.1:6379> strlen name
+(integer) 2
+```
+
+所以我们使用redis时会先将数据转为本客户端所在的字符编码格式然后再交给redis存储;
+
+
+
+触发格式化
+
+```
+[zzy@Gavin bin]$ ./redis-cli --raw
+```
+
+**not ending**

@@ -17,6 +17,8 @@ Solr 在使用 Lucene 搜索库并对此基础上进行了扩展。
 
 <div  align="center" ><iframe   style="width: 648px; height: 502px;" src="https://upos-sz-mirrorcos.bilivideo.com/upgcxcode/77/63/540706377/540706377-1-160.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1646682329&gen=playurlv2&os=cosbv&oi=3073951711&trid=a7f19f9041dc4efb824c7e9e95efcc49T&platform=html5&upsig=357d34206d15969c20a77cf4cd3ff39c&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,platform&mid=0&bvc=vod&nettype=0&bw=78029&orderid=0,1&logo=80000000"></iframe></div>
 
+
+
 ## 索引的类型
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/93a1ab59493f465e9c03fdd592aa67fe.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
@@ -897,6 +899,69 @@ public class SolrClient {
 当id相同时则修改,否则新增
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/4a1f39a533e3480a852d1843fd3caea1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+ **add的重载方法~的使用**
+
+```java
+
+    private String url= "http://192.168.135.145:8983/solr/";
+    @Test
+    void add(){
+
+        HttpSolrClient httpSolrClient = new HttpSolrClient.Builder(url).build();
+
+        SolrInputDocument solrInputFields = new SolrInputDocument();
+        solrInputFields.addField("gid",101);
+        solrInputFields.addField("name","麻婆煮豆腐");
+        solrInputFields.addField("price",26);
+        solrInputFields.addField("desc","麻婆豆腐");
+
+        try {
+            UpdateResponse goods = httpSolrClient.add("dept", solrInputFields);
+            UpdateResponse goods_shard1_replica_n1 = httpSolrClient.commit("goods_shard1_replica_n1");
+            httpSolrClient.close();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+```
+有时候我们在一个solr中有很多集合索引,这个时候我们定义地址时就不方便携带上集合的名字;
+
+比如在一个和心中有多个集合--->>
+![在这里插入图片描述](https://img-blog.csdnimg.cn/5a954867e3fe409cad9c1db4e2f1cafa.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_11,color_FFFFFF,t_70,g_se,x_16)
+
+现在想要往dept中添加信息~
+![在这里插入图片描述](https://img-blog.csdnimg.cn/93335015f2c34e9cbfa1c8ef84377710.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+```java
+    private String url= "http://192.168.135.145:8983/solr/";
+    @Test
+    void add(){
+
+        HttpSolrClient httpSolrClient = new HttpSolrClient.Builder(url).build();
+
+        SolrInputDocument solrInputFields = new SolrInputDocument();
+        solrInputFields.addField("gid",102);
+        solrInputFields.addField("name","麻婆煮豆腐1");
+        solrInputFields.addField("price",261);
+        solrInputFields.addField("desc","麻婆豆腐1");
+
+        try {
+            UpdateResponse goods = httpSolrClient.add("dept", solrInputFields);
+            UpdateResponse goods_shard1_replica_n1 = httpSolrClient.commit("dept");
+            httpSolrClient.close();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/76255795245b4a3480c4f24681da9fb9.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
 
  - **删除操作**
 
@@ -915,6 +980,19 @@ public class SolrClient {
 ```
 黄花菜被删除
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/3ed5375f8bb946b4a125e02e1efcc2bd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+当核心中不止一个集合,则提交的时候需要指明提交到那个集合,不然会报错`Expected mime type application/octet-stream but got text/html. <html>`
+
+```java
+@Test
+    void delete() throws IOException, SolrServerException {
+    HttpSolrClient build = new HttpSolrClient.Builder(url).build();
+    System.out.println(build.getBaseURL());
+    build.deleteById("goods","6e9f3376-f263-437e-9db1-cf1d55440f37");
+    build.commit("goods");
+    build.close();
+
+}
+```
 
  - **查询操作**
 
@@ -978,7 +1056,278 @@ public class SolrClient {
 
 大体逻辑就是通过solrquery来封装查询条件,然后获得的结果将需要的字段取出
 
+[**solr-solrj8的Api**](https://solr.apache.org/docs/8_1_0/solr-solrj/allclasses.html)
 
+## Spring-Solr启动器
+导入依赖~
+
+```xml
+  <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-solr</artifactId>
+        <version>2.4.13</version>
+    </dependency>
+```
+配置文件~
+
+```yml
+spring:
+  data:
+    solr:
+      host: http://192.168.134.145:8983/solr
+      zk-host: 192.168.135.145:2181,192.168.135.146:2181,192.168.135,147:2181
+```
+编写代码获取数据
+
+>这里由spring去管理solr客户端,这样就不用每次都去手动创建solr客户端了;
+
+**增加/修改1**
+```java
+ @Autowired
+    private SolrTemplate solrTemplate;//运行时会产生一个template对象并注入,编译时不会
+
+    @Override
+    public String addDoc() {
+        SolrInputDocument solrInputFields = new SolrInputDocument();
+        solrInputFields.addField("id", 10086);
+        solrInputFields.addField("gid", 1);
+        solrInputFields.addField("name", "麻辣鸡丝");
+        solrInputFields.addField("price", 100);
+        solrInputFields.addField("desc", "麻辣");
+        UpdateResponse goods = solrTemplate.saveDocument("goods", solrInputFields);
+        int status = goods.getStatus();
+        if (status == 0) {
+
+            solrTemplate.commit("goods");
+            return "success";
+        }
+//        solrTemplate.saveDocument()
+        solrTemplate.rollback("goods");
+        return "failed";
+
+    }
+```
+
+配置文件
+
+```yml
+spring:
+  data:
+    solr:
+      host: http://192.168.135.145:8983/solr
+```
+运行结果
+![在这里插入图片描述](https://img-blog.csdnimg.cn/5f6b082e649b46ad895a95b5ab731c11.png)
+>这里是通过solrTemplate来提交的;
+>其他操作跟之前的基本一致
+
+**增加/修改2**
+将对象整个放进去
+```java
+    @Override
+    public String addBean() {
+        goods goods=new goods(66,"紫菜蛋花汤",12,"热乎乎");
+        UpdateResponse goods1 = solrTemplate.saveBean("goods", goods);
+        if (goods1.getStatus()==0) {
+            solrTemplate.commit("goods");
+            return "success";
+        }
+        solrTemplate.rollback("goods");
+        return "failed";
+    }
+
+```
+>如果是将对象放进去,那么就需要在实体类中的属性上添加注解@field,否则不会讲对象添加到集合
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/4b41df433a864b5c812441e7c46065cf.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+结果~
+![在这里插入图片描述](https://img-blog.csdnimg.cn/fd74d26e80a340b6872a03c6819389b2.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+**同理就会有 saveDocuments与SaveBeans**
+
+```
+在这里插入代码片
+```
+
+ saveDocuments底层源码与SaveBeans底层源码
+```java
+@Override
+public UpdateResponse saveBeans(String collection, Collection<?> beans, Duration commitWithin) {
+	return execute(solrClient -> solrClient.add(collection, convertBeansToSolrInputDocuments(beans),
+			getCommitWithinTimeout(commitWithin)));
+}
+@Override
+	public UpdateResponse saveDocuments(String collection, Collection<SolrInputDocument> documents,
+			Duration commitWithin) {
+		return execute(solrClient -> solrClient.add(collection, documents, getCommitWithinTimeout(commitWithin)));
+	}
+
+
+```
+
+**新增/修改3**
+>根据唯一ID进行判断,重复则修改,没有则新增
+
+部分更新~跟新增/修改一样的代码~
+
+```java
+    @Override
+    public Integer updateGoods() {
+        SolrInputDocument solrInputFields = new SolrInputDocument();
+        solrInputFields.addField("id", 10086);
+        solrInputFields.addField("gid", 9999);
+        solrInputFields.addField("name", "麻辣小龙虾");
+        solrInputFields.addField("price", 100);
+        solrInputFields.addField("desc", "麻辣");
+
+        UpdateResponse goods = solrTemplate.saveDocument("goods", solrInputFields);
+        int status = goods.getStatus();
+        if (status == 0) {
+
+            solrTemplate.commit("goods");
+            return 1;
+        }
+//        solrTemplate.saveDocument()
+        solrTemplate.rollback("goods");
+        return -1;
+
+
+    }
+```
+删除就很简单了;
+**删除**
+
+```java
+    @Override
+ @Override
+    public Integer deleteGoodsById(String id) {
+        UpdateResponse goods = solrTemplate.deleteByIds("goods", id);
+        solrTemplate.commit("goods");
+        return goods.getStatus();
+    }
+```
+
+**查询**
+
+```java
+    @Override
+    public List<Goods> QuerySolr() {
+//        Criteria就类似于 strinbuilder,可以append继续添加条件
+        SimpleQuery simpleQuery = new SimpleQuery();
+//        添加查询条件
+        Criteria criteria = new Criteria("name");
+        criteria.endsWith("汤");
+        simpleQuery.addCriteria(criteria);
+        simpleQuery.setOffset(1L);
+        simpleQuery.setRows(5);
+     /*   criteria.and("price");
+        criteria.greaterThanEqual(10);*/
+
+        ScoredPage<Goods> goods1 = solrTemplate.queryForPage("goods", simpleQuery, Goods.class);
+        List<Goods> content1 = goods1.getContent();
+        /*
+//       Query query=new Query();
+        *//**
+         * query()参数
+         * String collection, Query query, Class<T> clazz
+         * query是一个接口,需要找实现类
+         * SimpleQuery
+         *//*
+//默认一页显示10条
+        Page<Goods> goods = solrTemplate.query("goods", simpleQuery, Goods.class);
+        solrTemplate.commit("goods");
+        if (goods.getTotalPages() == 0) {
+            return null;
+        }
+        System.out.println("查询到" + goods.getTotalElements() + "条记录");
+
+        List<Goods> content = goods.getContent();
+//获取高亮数据*/
+        return content1;
+    }
+
+```
+**高亮显示**
+
+```java
+
+    @Override
+    public List<Goods> HighLightDoods() {
+
+        //首先是查询
+        SimpleHighlightQuery simpleHighlightQuery = new SimpleHighlightQuery();
+        //查询的字段
+        Criteria criteria = new Criteria("desc");
+        criteria.contains("辣");
+        criteria.and("price");
+        criteria.between(10, 200);
+        //封装查询条件
+        simpleHighlightQuery.addCriteria(criteria);
+
+        //手动分页
+        simpleHighlightQuery.setOffset(0L);
+        simpleHighlightQuery.setRows(5);
+
+//        排序
+        //        
+//        Sort sort= new Sort(Sort.Direction.DESC,"price");//private 访问权限,需要静态方法返回一个Sort实例
+
+        Sort price = Sort.by(Sort.Direction.ASC, "price");
+        simpleHighlightQuery.addSort(price);
+//设置高亮
+        HighlightOptions highlightOptions = new HighlightOptions();
+
+        highlightOptions.addField("desc");
+
+        highlightOptions.setSimplePrefix("<span color='red'>");
+
+        highlightOptions.setSimplePostfix("</span>");
+        //将高亮放入条件
+        SolrDataQuery solrDataQuery = simpleHighlightQuery.setHighlightOptions(highlightOptions);
+
+        HighlightPage<Goods> goods = solrTemplate.queryForHighlightPage("goods", simpleHighlightQuery, Goods.class);
+        solrTemplate.commit("goods");
+//        取出高亮部分
+        List<HighlightEntry<Goods>> highlighted = goods.getHighlighted();
+
+        List<Goods> list = new ArrayList<>();
+//遍历
+        for (HighlightEntry<Goods> highlightEntry : highlighted) {
+//            得到highlight部分
+            List<HighlightEntry.Highlight> highlights = highlightEntry.getHighlights();
+
+            Goods entity = highlightEntry.getEntity();
+//            高亮部分不止一个,再次遍历
+            for (HighlightEntry.Highlight highlight : highlights) {
+                //在字段desc上添加高亮
+                if (highlight.getField().getName().equals("desc")) {
+//                    如果满足则在字段前添加高亮
+                    entity.setDesc(highlight.getSnipplets().get(0));
+
+//                    将高亮字段找个集合装起来
+                    list.add(entity);
+                }
+            }
+
+        }
+        return list;
+
+    }
+```
+结果~
+![在这里插入图片描述](https://img-blog.csdnimg.cn/577289fa052c4c9d8e81a6e4cc81baa4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+>高亮显示的思路是~在查询结果的基础上取数高亮部分,将通过高亮条件触发高亮前缀和后缀;
+
+
+
+使用zookeeper搭建一个dolr集群
+![在这里插入图片描述](https://img-blog.csdnimg.cn/1827cbb0d2c840b184bd21890ed431a1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+[具体操作~Solrcloud模式](https://blog.csdn.net/weixin_54061333/article/details/123291110)
 
 ## Solr~cloud模式
 
@@ -986,7 +1335,7 @@ public class SolrClient {
 
 
 
-### Solrcloud模式启动solr
+### 以Solr~cloud模式启动solr
 
 
  - 1,进入solr的安装目录下~`cd /usr/local/solr-8.11.1/`
@@ -1097,7 +1446,7 @@ xml,json,jsonl,csv,pdf,doc,docx,ppt,pptx,xls,xlsx,odt,odp,ods,ott,otp,ots,rtf,ht
 >
 >大部分时间我们需要自定义启动模式;
 
-### 自定义solrcloud
+### 启用外部zookeeper
 
 **启用外部zookeeper**
 >要使 ZooKeeper 服务处于活动状态，必须有大多数无故障的计算机可以相互通信。若要创建可以容忍 F 计算机故障的部署，应依靠部署 2xF+1 计算机。
@@ -1207,3 +1556,36 @@ Started Solr server on port 8983 (pid=60660). Happy searching!
 
 
 
+## 问题汇总
+
+**1,导入数据库数据失败/查不到数据?**
+
+
+情景复现
+:  dataimport--->>
+
+```bash
+Indexing completed. Added/Updated: 2 documents. Deleted 0 documents. (Duration: 01s)
+Requests: 1 1/s, Fetched: 0 2/s, Skipped: 0 , Processed: 2 2/s
+Started: less than a minute ago
+```
+1,无论怎么刷新依旧是0;
+2,检查配置的Fieldname / FieldType 均正确
+
+solr运行环境
+:  linux环境~fedora35 ,JDK8
+:  内核 5.0以上
+
+
+
+>原因肯能是数据库的用户没有权限访问 表格
+
+
+授权之后可以正常出结果了;
+
+```sql
+mysql> grant all on *.* to 'gavin'@'%' ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+```

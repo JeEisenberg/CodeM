@@ -1,6 +1,6 @@
 <div align=center><img src="..\pic\div\dog.gif"/></div>
 
-# Linux学习
+# LinuxSYS
 
 随着学习的深入,要捣鼓一下Linux系统,
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2889a00bc26d4913a77d3b3aed56adb7.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAR2F2aW5fTGlt,size_20,color_FFFFFF,t_70,g_se,x_16)

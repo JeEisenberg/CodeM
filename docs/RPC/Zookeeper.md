@@ -867,5 +867,50 @@ server.3=zoo3:2888:3888
 
 为了降低更新延迟，拥有一个专门的事务日志目录很重要。默认情况下，事务日志与数据快照和myid文件放在同一目录中。dataLogDir 参数指示用于事务日志的不同目录。
 
+# 问题汇总---
+
+## Zookeeper启动失败~
+
+今天在启动zookeeper集群时,出现了一个问题---
+Starting zookeeper ... FAILED TO START
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/0eeb62c67323460587e21d28e38635ac.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
+昨天还好好的,今天..
+**查找原因~**
+由于提示启动失败,一开始想的就是配置文件的问题,然后去查看配置文件,
+
+```bash
+tickTime=2000
+# The number of ticks that the initial 
+# synchronization phase can take
+initLimit=5
+# The number of ticks that can pass between 
+# sending a request and getting an acknowledgement
+syncLimit=2
+dataDir=/usr/local/zookeeper/data
+dataLogDir=/usr/local/zookeeper/logs
+clientPort=2181
+minSessionTimeout=16000
+maxSessionTimeout=30000
+4lw.commands.whitelist=mntr,conf,ruok
+server.1=192.168.135.145:2888:3888
+server.2=192.168.135.146:2888:3888
+server.3=192.168.135.147:2888:3888
+autopurge.snapRetainCount=3
+autopurge.purgeInterval=1
+
+```
+没发现问题
+>因为昨天配置完毕正常启动之后也没有改动,因此不是这里的问题;
+
+那就查看日志文件,发现启动时因为jvm内存设置的过高,内存溢出了,
+在zookeeper-env文件中将内存改小一些,(我直接把他给删了,简单粗暴~记得备份哦!)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/ad4941a21e2a4da7810ac8a32f5524ff.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 
+网上有很多常见的答案,五花八门,毕竟每个人遇到的问题可能不一样,
+
+>比较搞笑的是~说什么少了jar包的,让你重新下载安装,这我就很诧异了,怎么会少?莫非梦游删了?还是jar包收拾铺盖跑路了?
+>
+>遇到问题,先看看日志吧!
