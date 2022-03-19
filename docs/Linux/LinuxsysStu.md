@@ -1993,6 +1993,81 @@ ajax跨域的解决方案有种了，
 另一种是getjson（）
 最后一种是注解CrossOrigin
 
+## CentOS8换源
+
+报错代码展示:
+
+```c
+Errors during downloading metadata for repository 'BaseOS':
+  - Status code: 404 for https://mirrors.tuna.tsinghua.edu.cn/centos/8/BaseOS/x86_64/os/repodata/repomd.xml (IP: 101.6.15.130)
+Error: Failed to download metadata for repo 'BaseOS': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+
+```
+
+这个可以参考清华镜像源~[CentOS 镜像使用帮助](https://mirror.tuna.tsinghua.edu.cn/help/centos/)
+
+按照这个操作--->>我没有操作成功;于是我就改为了阿里云镜像,操作是:
+
+```c
+[root@localhost yum.repos.d]# pwd yum.repo.d
+/etc/yum.repos.d
+
+```
+
+
+
+清空仓库下的配置文件,~(记得清空前先备份一下)
+
+```c
+[root@localhost yum.repos.d]# rm -rf ./*
+[root@localhost yum.repos.d]# ls
+[root@localhost yum.repos.d]# 
+```
+
+下载阿里云的镜像配置文件
+
+```c
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-vault-8.5.2111.repo
+```
+
+提示--->>
+
+```c
+--2022-02-19 22:06:04--  https://mirrors.aliyun.com/repo/Centos-vault-8.5.2111.repo
+Resolving mirrors.aliyun.com (mirrors.aliyun.com)... 60.28.196.241, 221.204.23.238, 61.179.136.89, ...
+Connecting to mirrors.aliyun.com (mirrors.aliyun.com)|60.28.196.241|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2495 (2.4K) [application/octet-stream]
+Saving to: '/etc/yum.repos.d/CentOS-Base.repo'
+
+/etc/yum.repos.d/CentOS-Ba 100%[=====================================>]   2.44K  --.-KB/s    in 0s      
+
+2022-02-19 22:06:04 (8.73 MB/s) - '/etc/yum.repos.d/CentOS-Base.repo' saved [2495/2495]
+
+
+```
+
+最后清空一下 yum缓存 
+
+```c
+yum clean all
+```
+
+重新获得缓存
+
+```c
+[root@localhost yum.repos.d]# yum makecache
+CentOS-8.5.2111 - Base - mirrors.aliyun.com                              5.5 MB/s | 4.6 MB     00:00    
+CentOS-8.5.2111 - Extras - mirrors.aliyun.com                             27 kB/s |  10 kB     00:00    
+CentOS-8.5.2111 - AppStream - mirrors.aliyun.com                         5.8 MB/s | 8.4 MB     00:01    
+Metadata cache created.
+
+```
+
+至此镜像源更换成功
+
+
+
 <center><b>更多Linux咨询请扫描下方二维码,回复"linux"获取</b><center>
 
 ![](..\pic\div\weichatcode.png)
