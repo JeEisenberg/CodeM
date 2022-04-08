@@ -523,15 +523,227 @@ OK
 
 如果 key 已经存在并且是一个字符串， APPEND 命令将 value 追加到 key 原来的值的末尾。
 返回字符串长度
-```c
+```bash
 127.0.0.1:6379> append math 100
 (integer) 7
 127.0.0.1:6379> get math
 "1000100"
+```
+
+- **setbit**
+
+```bash
+127.0.0.1:6379> help setbit
+
+  SETBIT key offset value
+
+  summary: Sets or clears the bit at offset in the string value stored at key
+#在
+  since: 2.2.0
+
+  group: string
 
 ```
 
-### Hash表操作
+对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。
+
+根据值 value 是 1 或 0 来决定设置或清除位 bit。 当 key 不存在时会创建一个新的字符串。
+
+当字符串不够长时，字符串的长度将增大，以确保它可以在offset位置存储值。
+
+*offset* 参数需要大于等于0，并且小于 232 (bitmaps 最大 512MB)。
+
+当值字符串变长时，添加的 bit 会被设置为 0。
+
+```bash
+127.0.0.1:6379> setbit k 2 1
+(integer) 0
+127.0.0.1:6379> get k
+"m"
+
+127.0.0.1:6379> setbit m 2 1
+(integer) 0
+127.0.0.1:6379> get m
+" "
+#空格的二进制~00100000,当没有字符串时会新建一个字符串
+
+127.0.0.1:6379> setbit n  9 1
+(integer) 0
+127.0.0.1:6379> get n
+"\x00@"
+#设置时由于超过了一个字节 (8位),需要两个字节,不足的部分补0
+# 得到0000 0000 0100 0000   对应ascii中的@
+```
+
+-  **getbit**
+
+```
+
+127.0.0.1:6379> help getbit
+
+  GETBIT key offset
+  summary: Returns the bit value at offset in the string value stored at key
+  since: 2.2.0
+  group: string
+
+```
+
+使用案例~
+
+```bash
+127.0.0.1:6379> set k M
+OK
+#M的二进制表示为~01001101
+127.0.0.1:6379> getbit k 2
+(integer) 0
+#从第 0 开始 偏移量为2  的为  0
+```
+
+- **bitpos**
+
+> 返回字符串里面第一个被设置为1或者0的bit位。 
+
+```bash
+127.0.0.1:6379> help bitpos
+
+  BITPOS key bit [start] [end]
+  summary: Find first bit set or clear in a string  #返回字符串里面第一个被设置为1或者0的bit位。 
+  since: 2.8.7
+  group: string
+
+```
+
+```bash
+127.0.0.1:6379> setbit n  9 1
+(integer) 0
+127.0.0.1:6379> get n
+"\x00@"
+127.0.0.1:6379> bitpos n 0 0 0
+(integer) 0
+127.0.0.1:6379> bitpos n 0 0 1
+(integer) 0
+127.0.0.1:6379> bitpos n 0 0 9
+(integer) 0
+
+```
+
+setbit/getbit等为操作有什么实际应用呢?
+
+- setbit/getbit的实际应用
+
+1,统计一段时间内的登录用户在线天数
+
+如果是普通方式,需要通过读取关系型数据库,经过IO操作,设计的内存会比较大(用户id,日期等),如果通过redis的位操作,内存使用量会大大减少;
+
+首先,根据位操作可以实现 
+
+```bash
+#set key value;
+
+#key映射为用户的id,接下来就是位操作了;
+
+#一年有365天(366天),每一位表示一天
+
+#第一天登录则该位设置为1,否则设置为0
+127.0.0.1:6379> setbit xm 1 1 #表示小明第一天登陆了即20220101这天登陆了,
+(integer) 0  
+127.0.0.1:6379> setbit xm 100 1 #表示小明第100天登陆了
+(integer) 0
+#以此类推;这样我们可以通过不到50个字节来记录下用户的登录状态
+
+#活跃用户判断~  临近双十一,近一周的活跃用户(只要双十一前的这两周登陆过就算是活跃用户)需要用到bitcount来统计一下
+
+```
+
+- **bitcount**
+
+用法
+
+```bash
+BITCOUNT key [start][end]
+```
+
+计算给定字符串中，被设置为 `1` 的比特位的数量。
+
+一般情况下，给定的整个字符串都会被进行计数，通过指定额外的 `start` 或 `end` 参数，可以让计数只在特定的位上进行。
+
+`start` 和 `end` 参数的设置和 [*GETRANGE*](http://doc.redisfans.com/string/getrange.html#getrange) 命令类似，都可以使用负数值：比如 `-1` 表示最后一个位，而 `-2` 表示倒数第二个位，以此类推。
+
+不存在的 `key` 被当成是空字符串来处理，因此对一个不存在的 `key` 进行 `BITCOUNT` 操作，结果为 `0` 。
+
+```bash
+127.0.0.1:6379> help bitcount
+
+  BITCOUNT key [start end]
+  summary: Count set bits in a string
+  since: 2.6.0
+  group: string
+```
+
+所以统计双十一前两周的活跃用户只需要指定好相应的位用函数bitcount 统计即可(一个字节四位 )
+
+```bash
+127.0.0.1:6379> bitcount xm -2 -1
+(integer) 4
+127.0.0.1:6379>
+```
+
+> **位操作的好处~节省空间,速度快;**
+
+> > 我们来算一下记录的登陆的用户占用多少内存吧,每个用户50字节,4000万用户,2G左右,这样4000万用户的登录数据占2G内存,如果是redis集群,这样对单一服务器的压力会减少;
+
+- 统计一段时间内的活跃用户
+
+应用场景~双十一要搞3天,M要求在双十一期间给每一位登陆的用户发一个10块钱代金券应该发多少张代金券呢?
+
+-----假如2亿用户中有僵尸用户,一人只能发一张;
+
+还是通过setbit去操作;
+
+上面是通过人去统计天数,现在要求通过天数来统计人,所以把key 和 value颠倒一下并做好用户与value位之间的映射 ;
+
+比如 setbit 20221104 1  1   表示在20221104这一天有第一位用户xm登陆了(一定要做好用户和位之间的映射)
+
+所以在统计 20221104到20221110这些天有多少用户 登陆了
+
+通过bittop函数来实现
+
+- **bittop**
+
+```
+BITOP operation destkey key [key ...]
+```
+
+对一个或多个保存二进制位的字符串 `key` 进行位元操作，并将结果保存到 `destkey` 上。
+
+`operation` 可以是 `AND` 、 `OR` 、 `NOT` 、 `XOR` 这四种操作中的任意一种：
+
+- `BITOP AND destkey key [key ...]` ，对一个或多个 `key` 求逻辑并，并将结果保存到 `destkey` 。
+- `BITOP OR destkey key [key ...]` ，对一个或多个 `key` 求逻辑或，并将结果保存到 `destkey` 。
+- `BITOP XOR destkey key [key ...]` ，对一个或多个 `key` 求逻辑异或，并将结果保存到 `destkey` 。
+- `BITOP NOT destkey key` ，对给定 `key` 求逻辑非，并将结果保存到 `destkey` 。
+
+除了 `NOT` 操作之外，其他操作都可以接受一个或多个 `key` 作为输入。
+
+**处理不同长度的字符串**
+
+当 [BITOP](http://doc.redisfans.com/string/bitop.html#bitop) 处理不同长度的字符串时，较短的那个字符串所缺少的部分会被看作 `0` 。
+
+空的 `key` 也被看作是包含 `0` 的字符串序列。
+
+所以将20221104 到202221111这期间的key取or操作就能得到登录的这期间登陆的用户(并且已去重);
+
+```bash
+127.0.0.1:6379> bitop or 20221111 20221104 20221105
+(integer) 39
+127.0.0.1:6379> bitcount 20221111 -2 -1
+(integer) 3
+```
+
+
+
+**Hash表操作**
+
 Hash类型的值中包含多组field value。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/ecbc5d1276f146149bee70b3b9a641b0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29kZU1hcnRhaW4=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
@@ -2173,6 +2385,15 @@ string
 
 ```
 [zzy@Gavin bin]$ ./redis-cli --raw
+
 ```
 
-**not ending**
+更多底层知识--->>**[deepRedis](./deepRedis.md#Redis)**
+
+
+
+# Redis命令快速查询
+
+
+
+<div  align="center" ><iframe   style="width: 648px; height: 502px;" src="https://www.redis.net.cn/order"></iframe></div>

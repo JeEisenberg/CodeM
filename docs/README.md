@@ -54,19 +54,20 @@
 
 # 学习园区
 
-| [IDEA(推荐)](/idea/Idea.md#idea)                        | [JAVA](/java/JavaBase1-8.md#java概述)          | [HTML](/html/html.md#html语言)                          | [jQuery](/html/jQuery.md#jquery)                | [Java进阶](/javaprom/Javaprom.md#java知识点精选)       | **[MybatisPlus](/mybatis/MybatisPlus.md#MybatisPlus)** |
-| :------------------------------------------------------ | :--------------------------------------------- | :------------------------------------------------------ | :---------------------------------------------- | :----------------------------------------------------- | :----------------------------------------------------- |
-| **[Eclipse](https://www.w3cschool.cn/eclipse/)**        | **[MySQL](/mysql/MySQLBase01.md#mysql数据库)** | **[CSS](https://www.runoob.com/css/css-tutorial.html)** | **[Vue](https://cn.vuejs.org/v2/guide/)**       | **[Maven](/maven/MavenBase1.md#Maven)**                | **[Junit5](/Junit/Junit.md#Junit5)**                   |
-| **[JScript](https://www.w3school.com.cn/js/index.asp)** | **[Spring](/spring/Spring.md#spring)**         | **[SpringMvc](/spring/SpringMvc.md#springmvc)**         | **[Git](/git/GitBase01.md#Git)**                | **[FreeMarker](/freemarker/freemarker.md#freemarker)** | **[RPC](/RPC/Rpc.md#RPC)**                             |
-| **[Tomcat](/tomcat/tomcat.md#tomcat的安装)**            | **[Mybatis](/mybatis/Mybatis.md#mybatis)**     | **[SpringBoot](/spring/SpringBoot.md#springboot)**      | **[Linux](/Linux/LinuxsysStu.md#LinuxSYS)**     | **[ThymeLeaf](/thymeleaf/ThymeLeaf.md#thymeleaf)**     | **[ZooKeeper](/RPC/Zookeeper.md#ZooKeeper)**           |
-| **[Dubbo](/RPC/Dubbo.md#Dubbo)**                        | **[FastDFS](/RPC/FastDFS.md#FastDFS)**         | **[Nginx](/RPC/nginx.md#Nginx)**                        | **[kindEditor](/RPC/kindEditor.md#kindeditor)** | **[Redis](/Redis/redis.md#Redis)**                     | **[Solr](/solr/solr.md#Apache-Solr)**                  |
-| **[AMQP](/RPC/RabbitMQ.md#AMQP)**                       |                                                |                                                         |                                                 |                                                        |                                                        |
+| [IDEA(推荐)](/idea/Idea.md#idea)                        | [JAVA](/java/JavaBase1-8.md#java概述)                        | [HTML](/html/html.md#html语言)                               | [jQuery](/html/jQuery.md#jquery)                | [Java进阶](/javaprom/Javaprom.md#java知识点精选)       | **[MybatisPlus](/mybatis/MybatisPlus.md#MybatisPlus)** |
+| :------------------------------------------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :---------------------------------------------- | :----------------------------------------------------- | :----------------------------------------------------- |
+| **[Eclipse](https://www.w3cschool.cn/eclipse/)**        | **[MySQL](/mysql/MySQLBase01.md#mysql数据库)**               | **[CSS](https://www.runoob.com/css/css-tutorial.html)**      | **[Vue](https://cn.vuejs.org/v2/guide/)**       | **[Maven](/maven/MavenBase1.md#Maven)**                | **[Junit5](/Junit/Junit.md#Junit5)**                   |
+| **[JScript](https://www.w3school.com.cn/js/index.asp)** | **[Spring](/spring/Spring.md#spring)**                       | **[SpringMvc](/spring/SpringMvc.md#springmvc)**              | **[Git](/git/GitBase01.md#Git)**                | **[FreeMarker](/freemarker/freemarker.md#freemarker)** | **[RPC](/RPC/Rpc.md#RPC)**                             |
+| **[Tomcat](/tomcat/tomcat.md#tomcat的安装)**            | **[Mybatis](/mybatis/Mybatis.md#mybatis)**                   | **[SpringBoot](/spring/SpringBoot.md#springboot)**           | **[Linux](/Linux/LinuxsysStu.md#LinuxSYS)**     | **[ThymeLeaf](/thymeleaf/ThymeLeaf.md#thymeleaf)**     | **[ZooKeeper](/RPC/Zookeeper.md#ZooKeeper)**           |
+| **[Dubbo](/RPC/Dubbo.md#Dubbo)**                        | **[FastDFS](/RPC/FastDFS.md#FastDFS)**                       | **[Nginx](/RPC/nginx.md#Nginx)**                             | **[kindEditor](/RPC/kindEditor.md#kindeditor)** | **[Redis](/Redis/redis.md#Redis)**                     | **[Solr](/solr/solr.md#Apache-Solr)**                  |
+| **[AMQP](/RPC/RabbitMQ.md#AMQP)**                       | **[SpringSecurity](/spring/SpringSecurity.md#SpringSecurity)** | **[MicroService](/MicroService/SpringMicroService.md#MicroService)** | **[BigData](/bigData/bigDataSync.md#BigData)**  |                                                        |                                                        |
 
 # 面试专区
 
 | **[Java面试题更新中...](/java/javaMT.md#JavaQuestion)** |
 | ------------------------------------------------------- |
 | **[Mysql面试题待更新...](preparing)**                   |
+| **[Redis面试题](/Redis/deepRedis.md#Redis)**            |
 
 
 
